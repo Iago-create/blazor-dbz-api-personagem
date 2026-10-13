@@ -1,0 +1,221 @@
+﻿@page "/"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+@using System.Text.Json.Serialization
+@inject IHttpClientFactory HttpClientFactory
+
+<PageTitle>Blazor DBZ Personagem</PageTitle>
+
+<div class="app-shell">
+
+    <aside class="sidebar">
+        <div class="app-name">BlazorDragonBall</div>
+
+        <div class="menu-item active">
+            🏠 <span>Personagem</span>
+        </div>
+
+        <div class="menu-item">
+            ✦ <span>API Dragon Ball</span>
+        </div>
+
+        <div class="sidebar-note">
+            Consulte os personagens do universo Dragon Ball.
+        </div>
+    </aside>
+
+    <main class="content">
+
+        <h1>Informações do Personagem</h1>
+
+        <p>
+            Digite o ID de um personagem para consultar
+            os dados na API.
+        </p>
+
+        <form class="search-form"
+              @onsubmit="BuscarPersonagem"
+              @onsubmit:preventDefault>
+
+            <label for="personagemId">
+                ID do personagem
+            </label>
+
+            <div class="search-row">
+                <input id="personagemId"
+                       type="number"
+                       min="1"
+                       @bind="personagemId" />
+
+                <button type="submit" disabled="@carregando">
+                    @(carregando ? "Buscando..." : "Buscar")
+                </button>
+            </div>
+
+        </form>
+
+        @if (!string.IsNullOrWhiteSpace(mensagemErro))
+        {
+            <div class="error-message">
+                @mensagemErro
+            </div>
+        }
+
+        @if (personagem is not null)
+        {
+            <section class="character-card">
+
+                <div class="character-heading">
+
+                    @if (!string.IsNullOrWhiteSpace(personagem.Image))
+                    {
+                        <img class="character-image"
+                             src="@personagem.Image"
+                             alt="Imagem de @personagem.Name" />
+                    }
+
+                    <div>
+                        <h2>@personagem.Name</h2>
+
+                        <p>
+                            <strong>Nome:</strong>
+                            @personagem.Name
+                        </p>
+
+                        <p>
+                            <strong>Planeta de Origem:</strong>
+                            @(personagem.OriginPlanet?.Name
+                                ?? "Não informado")
+                        </p>
+                    </div>
+
+                </div>
+
+                <h2 class="transform-title">
+                    Transformações:
+                </h2>
+
+                @if (personagem.Transformations is { Count: > 0 })
+                {
+                    <ul class="transform-list">
+                        @foreach (var transformacao
+                            in personagem.Transformations)
+                        {
+                            <li>@transformacao.Name</li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <p>
+                        Não há transformações cadastradas
+                        para este personagem.
+                    </p>
+                }
+
+            </section>
+        }
+        else if (string.IsNullOrWhiteSpace(mensagemErro))
+        {
+            <div class="empty-state">
+                <h2>Bem-vindo!</h2>
+
+                <p>
+                    Digite um ID e clique em Buscar
+                    para visualizar um personagem.
+                </p>
+            </div>
+        }
+
+        <p class="footer-note">
+            Dados fornecidos pela Dragon Ball API.
+        </p>
+
+    </main>
+
+</div>
+
+@code {
+    private int personagemId = 1;
+
+    private bool carregando;
+
+    private string? mensagemErro;
+
+    private Personagem? personagem;
+
+    private async Task BuscarPersonagem()
+    {
+        if (personagemId < 1)
+        {
+            mensagemErro =
+                "Digite um ID válido, maior que zero.";
+
+            personagem = null;
+            return;
+        }
+
+        carregando = true;
+        mensagemErro = null;
+        personagem = null;
+
+        try
+        {
+            var client = HttpClientFactory.CreateClient();
+
+            personagem =
+                await client.GetFromJsonAsync<Personagem>(
+                    $"https://dragonball-api.com/api/characters/{personagemId}");
+
+            if (personagem is null)
+            {
+                mensagemErro =
+                    "Nenhum personagem foi encontrado para esse ID.";
+            }
+        }
+        catch (HttpRequestException)
+        {
+            mensagemErro =
+                "Não foi possível acessar a API. Verifique sua conexão.";
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            mensagemErro =
+                "Não foi possível interpretar os dados da API.";
+        }
+        finally
+        {
+            carregando = false;
+        }
+    }
+
+    public class Personagem
+    {
+        [JsonPropertyName("id")]
+        public int Id { get; set; }
+
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+
+        [JsonPropertyName("image")]
+        public string? Image { get; set; }
+
+        [JsonPropertyName("originPlanet")]
+        public Planeta? OriginPlanet { get; set; }
+
+        [JsonPropertyName("transformations")]
+        public List<Transformacao>? Transformations { get; set; }
+    }
+
+    public class Planeta
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+    }
+
+    public class Transformacao
+    {
+        [JsonPropertyName("name")]
+        public string Name { get; set; } = "";
+    }
+}

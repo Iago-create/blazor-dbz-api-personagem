@@ -1,0 +1,238 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #252936;
+    background: #ffffff;
+}
+
+.top-info {
+    min-height: 122px;
+    padding: 14px 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 19px;
+    line-height: 1.9;
+    color: #171717;
+}
+
+.brand {
+    color: #63318a;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-size: 31px;
+    text-align: center;
+    line-height: 1;
+}
+
+.brand small {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    margin-top: 5px;
+}
+
+.app-shell {
+    display: grid;
+    grid-template-columns: 247px minmax(0, 1fr);
+    margin: 0 5%;
+    min-height: 480px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.sidebar {
+    background: linear-gradient(
+        180deg,
+        #071638 0%,
+        #281052 58%,
+        #4a0752 100%
+    );
+    color: white;
+    padding: 0 13px 22px;
+}
+
+.app-name {
+    padding: 18px 12px 22px;
+    font-size: 18px;
+}
+
+.menu-item {
+    display: flex;
+    gap: 13px;
+    align-items: center;
+    padding: 13px 15px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    color: #f3f1ff;
+}
+
+.menu-item.active {
+    background: #666e9d;
+}
+
+.sidebar-note {
+    color: #d5cde4;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 18px 12px;
+}
+
+.content {
+    padding: 26px 32px;
+    background: #ffffff;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 500;
+    margin: 0 0 12px;
+    color: #30343b;
+}
+
+.search-form {
+    max-width: 520px;
+    margin: 25px 0;
+}
+
+.search-form label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.search-row {
+    display: flex;
+    gap: 10px;
+}
+
+input {
+    min-width: 0;
+    flex: 1;
+    padding: 11px 12px;
+    border: 1px solid #c9cbd3;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    background: #433078;
+    color: white;
+    font-size: 15px;
+    padding: 11px 20px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+
+.character-card {
+    border: 1px solid #e5e5ec;
+    border-radius: 9px;
+    padding: 20px;
+    max-width: 760px;
+    box-shadow: 0 3px 14px rgba(30, 20, 60, 0.06);
+}
+
+.character-heading {
+    display: flex;
+    gap: 22px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.character-image {
+    width: 130px;
+    height: 150px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #f7f7fb;
+}
+
+.character-heading h2 {
+    margin-top: 0;
+}
+
+.transform-title {
+    margin-bottom: 8px;
+    font-size: 23px;
+    font-weight: 500;
+}
+
+.transform-list {
+    line-height: 1.7;
+}
+
+.error-message {
+    background: #fff0f0;
+    border: 1px solid #f0b9b9;
+    color: #8e2020;
+    padding: 12px;
+    border-radius: 5px;
+    max-width: 650px;
+}
+
+.empty-state {
+    margin-top: 25px;
+    padding: 20px;
+    border-radius: 8px;
+    background: #f7f6fb;
+    max-width: 600px;
+}
+
+.empty-state h2 {
+    margin-top: 0;
+}
+
+.footer-note {
+    margin-top: 32px;
+    font-size: 12px;
+    color: #777;
+}
+
+@media (max-width: 700px) {
+    .top-info {
+        padding: 14px 18px;
+        font-size: 13px;
+        line-height: 1.7;
+    }
+
+    .brand {
+        font-size: 22px;
+    }
+
+    .app-shell {
+        grid-template-columns: 1fr;
+        margin: 0;
+    }
+
+    .sidebar {
+        padding-bottom: 8px;
+    }
+
+    .sidebar-note {
+        display: none;
+    }
+
+    .menu-item {
+        display: inline-flex;
+        margin: 0 3px 8px;
+    }
+
+    .content {
+        padding: 24px 18px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+}
